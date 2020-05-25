@@ -1,9 +1,5 @@
-
-
 import React, { Component, lazy } from 'react';
-import ReactDOM from 'react-dom';
 
-import { Bar, Line } from 'react-chartjs-2';
 import NavBar from '../../NavBar/NavBar/NavBar'
 
 import {
@@ -35,31 +31,8 @@ import Cylinder from "fusioncharts/fusioncharts.widgets"
 // Step 5 - Include the theme as fusion
 import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
-
-
-
+//for the tank
 ReactFC.fcRoot(FusionCharts, Cylinder, FusionTheme)
-
-
-
-
-// Main Chart
-
-//Random Numbers
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-  data1.push(random(50, 200));
-  data2.push(random(80, 100));
-  data3.push(65);
-}
 
 
 
@@ -83,16 +56,16 @@ class Dashboard extends Component {
       show: false,
       x: '',
       y: '',
-      tanks: '',
-      tanks_total: '',
-      tank_name: ''
+      tanks: '', //array of tank values
+      tanks_total: '', //total tank value
+      tank_name: '' //tank names
     };
   }
 
 
   async componentDidMount() {
     try {
-
+      //calling the api
       this.getfromApi()
       this.interval = setInterval(this.getfromApi(), 100000);
 
@@ -105,7 +78,7 @@ class Dashboard extends Component {
   getfromApi = async () => {
     let myheaders = {
       //setting the auth header/token
-      "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiI3ZWRmODRmNC03MjJiLTQ3OWEtOGY2ZS1iYjI3M2NmMTM0NGUiLCJleHAiOjE1OTAzMzU2NTJ9.PPKIUOiN1gvv5dTT3V8xzr9_Tt9v0mP8waOd_qOorao"
+      "authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTA0MDMxNTgsInB1YmxpY19pZCI6IjdlZGY4NGY0LTcyMmItNDc5YS04ZjZlLWJiMjczY2YxMzQ0ZSJ9.nBB19lijTPRPiZnYx2ymFF4YRAVbPCPR838VSFf0Z0Y"
     }
     try {
       var cost = 0
@@ -130,7 +103,7 @@ class Dashboard extends Component {
             tank_name.push(Object.values(energy1.data.units[i])[0].unit_name) //tank name
           }
         })
-      this.setState({ cylinder_value: cost, tanks_total: tanks_total.toFixed(2), tanks: tanks, tank_name: tank_name })
+      this.setState({ cylinder_value: cost, tanks_total: tanks_total.toFixed(2), tanks: tanks, tank_name: tank_name }) //setting the values to the main variables
     } catch (err) {
       console.log(err.message);
     }
@@ -151,7 +124,8 @@ class Dashboard extends Component {
     var arr = []
     var arr1 = []
     console.log(this.state.startDate)
-    for (i = 0; i < this.state.dummy_dates.length; i++) {
+    //splitting the date into components
+    for (var i = 0; i < this.state.dummy_dates.length; i++) {
       var date_check = this.state.dummy_dates[i].split('/')
 
       if (parseInt(date_check[1]) == date.getMonth()) {
@@ -168,9 +142,8 @@ class Dashboard extends Component {
 
   render() {
     let items = [];
-
-    //storing the tanks
-    for (i = 0; i < this.state.tanks.length; i = i + 2) {
+    //storing the tanks - items stores each tank in a card, later we print the items variable
+    for (var i = 0; i < this.state.tanks.length; i = i + 2) {
       items.push(
         <Row>
           <Col xl={6} sm={12} md={12}>
@@ -273,129 +246,6 @@ class Dashboard extends Component {
               />
             </Card>
           </Col>
-          {/* <Col>
-            <Row>
-              <Col xs={6}>
-                <Card className="text-center">
-                  <ReactFC
-                    type="cylinder"dnc cdncjdncjndcjncjc  vufufvnunvuvn vjirjirji vnivjirji vjij vijirji jvi vjijvinivnjfnj
-                    width="400"
-                    height="300"
-                    dataFormat="JSON"
-                    dataSource={{
-                      chart: {
-                        caption: "Water Level Indicator",
-                        lowerlimit: "0",
-                        upperlimit: "250",
-                        lowerlimitdisplay: "Empty",
-                        upperlimitdisplay: "Full",
-                        numbersuffix: "Kl",
-                        cylfillcolor: "0ce1ff",
-                        plottooltext: "Water Level: <b>" + this.state.cylinder_value + "</b>",
-                        cylfillhoveralpha: "85",
-                        width: "400",
-                        showTickMarks: 1,
-                        showLimits: 1,
-                        cylRadius: 100,
-                        theme: "fusion"
-                      },
-                      value: 200
-                    }}
-                  />
-                </Card>
-              </Col>
-
-              <Col xs={6}>
-                <Card className="text-center">
-                  <ReactFC
-                    type="cylinder"
-                    width="400"
-                    height="300"
-                    dataFormat="JSON"
-                    dataSource={{
-                      chart: {
-                        caption: "Water Level Indicator",
-                        lowerlimit: "0",
-                        upperlimit: "250",
-                        lowerlimitdisplay: "Empty",
-                        upperlimitdisplay: "Full",
-                        numbersuffix: "Kl",
-                        cylfillcolor: "0ce1ff",
-                        plottooltext: "Water Level: <b>" + this.state.cylinder_value + "</b>",
-                        cylfillhoveralpha: "85",
-                        width: "400",
-                        showTickMarks: 1,
-                        showLimits: 1,
-                        cylRadius: 100,
-                        theme: "fusion"
-                      },
-                      value: 250
-                    }}
-                  />
-                </Card>
-              </Col>
-            </Row>
-            <Row>
-              <Col >
-                <Card className="text-center">
-                  <ReactFC
-                    type="cylinder"
-                    width="400"
-                    height="300"
-                    dataFormat="JSON"
-                    dataSource={{
-                      chart: {
-                        caption: "Water Level Indicator",
-                        lowerlimit: "0",
-                        upperlimit: "250",
-                        lowerlimitdisplay: "Empty",
-                        upperlimitdisplay: "Full",
-                        numbersuffix: "Kl",
-                        cylfillcolor: "0ce1ff",
-                        plottooltext: "Water Level: <b>" + this.state.cylinder_value + "</b>",
-                        cylfillhoveralpha: "85",
-                        width: "400",
-                        showTickMarks: 1,
-                        showLimits: 1,
-                        cylRadius: 100,
-                        theme: "fusion"
-                      },
-                      value: 150
-                    }}
-                  />
-                </Card>
-              </Col>
-              <Col >
-                <Card className="text-center">
-                  <ReactFC
-                    type="cylinder"
-                    width="400"
-                    height="300"
-                    dataFormat="JSON"
-                    dataSource={{
-                      chart: {
-                        caption: "Water Level Indicator",
-                        lowerlimit: "0",
-                        upperlimit: "250",
-                        lowerlimitdisplay: "Empty",
-                        upperlimitdisplay: "Full",
-                        numbersuffix: "Kl",
-                        cylfillcolor: "0ce1ff",
-                        plottooltext: "Water Level: <b>" + this.state.cylinder_value + "</b>",
-                        cylfillhoveralpha: "85",
-                        width: "400",
-                        showTickMarks: 1,
-                        showLimits: 1,
-                        cylRadius: 100,
-                        theme: "fusion"
-                      },
-                      value: 100
-                    }}
-                  />
-                </Card>
-              </Col>
-            </Row>
-          </Col> */}
           <Col>
             {items}
           </Col>

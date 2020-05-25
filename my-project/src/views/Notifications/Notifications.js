@@ -17,6 +17,8 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+
+//size of the notification list
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+//generating the list items
 function generate(element) {
     return [0, 1, 2].map((value) =>
         React.cloneElement(element, {
@@ -37,6 +40,8 @@ function generate(element) {
         }),
     );
 }
+
+//count for the likes and dislikes
 var up = 0
 var down = 0
 const thumbsup = () => {
@@ -62,11 +67,10 @@ export default function InteractiveList() {
                 <div className={classes.demo}>
                     <List dense={dense}>
                         {generate(
+                            //the list 
                             <ListItem>
                                 <ListItemText
-                                    primary="04/05/2020, 19:58 , Storage, Sump1, 
-Water level reached 80% (20Kl)
-"
+                                    primary="04/05/2020, 19:58 , Storage, Sump1, Water level reached 80% (20Kl)"
                                     secondary={secondary ? 'Secondary text' : null}
                                 />
                                 <ListItemSecondaryAction>

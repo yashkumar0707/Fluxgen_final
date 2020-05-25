@@ -150,7 +150,8 @@ class Dashboard extends Component {
       cylinder_hover: "", //for the cylinder hover
       show: false,
       tanks: '', //for each individual tank
-      tanks_total: '' //for the total value of the tanks
+      tanks_total: '', //for the total value of the tanks,
+      tank_name: ''//to store the tank name
     };
   }
 
@@ -198,13 +199,14 @@ class Dashboard extends Component {
   //getting data from api
   getfromApi = async () => {
     let myheaders = {
-      //setting thr auth header/token
-      "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNfaWQiOiI3ZWRmODRmNC03MjJiLTQ3OWEtOGY2ZS1iYjI3M2NmMTM0NGUiLCJleHAiOjE1OTAzMjA4Mjd9.fMynJu-PzCv0h6SnOD6LEq3IAOXvt0xplF0JhDElV0A"
+      //setting the auth header/token
+      "authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTA0MDMxNTgsInB1YmxpY19pZCI6IjdlZGY4NGY0LTcyMmItNDc5YS04ZjZlLWJiMjczY2YxMzQ0ZSJ9.nBB19lijTPRPiZnYx2ymFF4YRAVbPCPR838VSFf0Z0Y"
     }
     try {
       var cost = 0
       var tanks_total = 0
       var tanks = []
+      var tank_name = ''
       //fetching from the api
       await fetch(`https://api.fluxgen.in/aquagen/v1/industries/DEMO1/consumption/latest?category=Storage`, {
         method: 'GET',
@@ -212,16 +214,12 @@ class Dashboard extends Component {
       })
         .then(response => response.json())
         .then(energy1 => {
+          console.log(energy1)
           //console.log(Object.values(energy1.data.units[0])[0].process_level)
-          cost = energy1.data.units[0].DEMO1SU2.process_level
-          //looping through the object for the elements we need
-          for (var i = 0; i < energy1.data.units.length; i++) {
-            console.log(Object.values(energy1.data.units[i])[0].process_level)
-            tanks_total = tanks_total + Object.values(energy1.data.units[i])[0].process_level
-            tanks.push(Object.values(energy1.data.units[i])[0].process_level)
-          }
+          cost = energy1.data.units[0].DEMO1SU1.process_level
+          tank_name = energy1.data.units[0].DEMO1SU1.unit_name
         })
-      this.setState({ cylinder_value: cost, tanks_total: tanks_total, tanks: tanks })
+      this.setState({ cylinder_value: cost, tank_name: tank_name })
     } catch (err) {
       console.log(err.message);
     }
@@ -251,7 +249,8 @@ class Dashboard extends Component {
     var arr = []
     var arr1 = []
     console.log(this.state.startDate)
-    for (i = 0; i < this.state.dummy_dates.length; i++) {
+    //splitting the date into components
+    for (var i = 0; i < this.state.dummy_dates.length; i++) {
       var date_check = this.state.dummy_dates[i].split('/')
 
       if (parseInt(date_check[1]) == date.getMonth()) {
@@ -271,7 +270,7 @@ class Dashboard extends Component {
     return (
       <div className="animated fadeIn"  >
         <NavBar
-          heading="sump"
+          heading="Sump"
           width="100%"
           big="true"
           datacallback={this.imagehandler}>
@@ -293,15 +292,6 @@ class Dashboard extends Component {
                 Water Consumption in a Week and Live Water Level Update
               </CardHeader>
               <CardBody>
-
-                {/* <hr className="mt-0" />
-                    <div className="card-header-actions">
-                      <a href="http://www.chartjs.org" className="card-header-action">
-                      </a>
-                    </div>
-                    <div className="chart-wrapper">
-                      <Doughnut data={doughnut} />
-                    </div> */}
                 <ReactFC
                   type="cylinder"
                   width="100%"
@@ -309,14 +299,14 @@ class Dashboard extends Component {
                   dataFormat="JSON"
                   dataSource={{
                     chart: {
-                      caption: "Water Level Indicator",
+                      caption: this.state.tank_name,
                       lowerlimit: "0",
                       upperlimit: "250",
                       lowerlimitdisplay: "Empty",
                       upperlimitdisplay: "Full",
                       numbersuffix: "Kl",
                       cylfillcolor: "0ce1ff",
-                      plottooltext: "Water Level: <b>" + this.state.cylinder_value + "</b>",
+                      plottooltext: "Water Level: <b>" + this.state.cylinder_value + " Kl</b>",
                       cylfillhoveralpha: "85",
                       width: "400",
                       showTickMarks: 1,
@@ -324,7 +314,7 @@ class Dashboard extends Component {
                       cylRadius: 125,
                       theme: "fusion"
                     },
-                    value: 200
+                    value: this.state.cylinder_value
                   }}
                 />
               </CardBody>
