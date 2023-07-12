@@ -24,7 +24,7 @@
     "core-js": "^3.6.5",
     "font-awesome": "^4.7.0",
     "fusioncharts": "^3.15.1-sr.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^9.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
@@ -39,7 +39,7 @@
     "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
